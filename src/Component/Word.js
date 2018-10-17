@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-
+import {connect} from 'react-redux';
 //stateless component
 //functional component
 // export function Word(){
@@ -22,10 +22,10 @@ import React , {Component} from 'react';
 // }
 // export default Word;
 
-export default class Word extends Component{
+class Word extends Component{
 
     render(){
-        const { word , onremoveword , ontoggleWord} = this.props;
+        const { word , dispatch} = this.props;
         return(
             <div className="word" key={word.id}>
                 <div className="word-container">
@@ -37,13 +37,13 @@ export default class Word extends Component{
                 <div className="btn-container">
                 <button 
                     className={word.isMemorized ? 'btn btn-danger' : 'btn btn-success'}
-                    onClick={() => ontoggleWord(word.id)}>
+                    onClick={() => dispatch({type : 'TOGGLE_WORD' , id : word.id})}>
                     {word.isMemorized ? 'Forgot' : 'Memoried'}
                 </button>
         
                 <button 
                     className="btn btn-warning"
-                    onClick={() => onremoveword(word.id)}>
+                    onClick={() => dispatch({type : 'REMOVE_WORD' , id : word.id})}>
                     Remove
                 </button>
                 </div>
@@ -52,3 +52,4 @@ export default class Word extends Component{
     }
 }
 
+export default connect()(Word);

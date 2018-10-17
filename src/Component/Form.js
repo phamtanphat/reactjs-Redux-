@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
-export default class Form extends Component{
+import {connect} from 'react-redux';
+class Form extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -22,13 +22,13 @@ export default class Form extends Component{
         this.setState({txtEn : '' , txtVn : ''});
     }
     render(){
-        const { txtEn , txtVn  } = this.state;
-        const { ontoggleForm  } = this.props;
+        const { txtEn , txtVn } = this.state;
+        const { dispatch } = this.props;
         if(!this.props.shouldShowForm) return (
             <button 
                 className="btn btn-success"
                 style={{width : 200 ,margin : 10}}
-                onClick={ontoggleForm}>
+                onClick={() =>  dispatch({type : 'TOGGLE_FORM'})}>
                         +
             </button>
         );
@@ -49,12 +49,21 @@ export default class Form extends Component{
                 <div className="btn-container">
                     <button 
                         className="btn btn-success"
-                        onClick={this.addWord}>
+                        onClick={()=>{
+                            const word = {
+                                id : Math.random() + '',
+                                en : txtEn,
+                                vn : txtVn,
+                                isMemorized : false
+                            }
+                            dispatch({type : 'ADD_WORD' , word : word})
+                            this.setState({txtEn : '' ,txtVn : ''});
+                        }}>
                         Add word
                     </button>
                     <button
                         className="btn btn-danger"
-                        onClick={ontoggleForm}>
+                        onClick={() => dispatch({type : 'TOGGLE_FORM'})}>
                         Cancel
                     </button>
                 </div>
@@ -62,3 +71,6 @@ export default class Form extends Component{
         );
     }
 }
+
+const mapstate = state => ({shouldShowForm : state.shouldShowForm});
+export default connect(mapstate)(Form);
